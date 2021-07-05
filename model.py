@@ -3,6 +3,7 @@ from modules import *
 
 class Model():
     def __init__(self, usernum, itemnum, args, reuse=None):
+        # 占位符，在tensorflow中类似于函数参数，运行时必须传入值
         self.is_training = tf.placeholder(tf.bool, shape=())
         self.u = tf.placeholder(tf.int32, shape=(None))
         self.input_seq = tf.placeholder(tf.int32, shape=(None, args.maxlen))
@@ -76,6 +77,8 @@ class Model():
         self.test_item = tf.placeholder(tf.int32, shape=(101))
         test_item_emb = tf.nn.embedding_lookup(item_emb_table, self.test_item)
         self.test_logits = tf.matmul(seq_emb, tf.transpose(test_item_emb))
+        # tf.transpose转置
+        # tf.matmul矩阵相乘
         self.test_logits = tf.reshape(self.test_logits, [tf.shape(self.input_seq)[0], args.maxlen, 101])
         self.test_logits = self.test_logits[:, -1, :]
 
@@ -85,6 +88,7 @@ class Model():
 
         # ignore padding items (0)
         istarget = tf.reshape(tf.to_float(tf.not_equal(pos, 0)), [tf.shape(self.input_seq)[0] * args.maxlen])
+        # pos!=0的真假值
         self.loss = tf.reduce_sum(
             - tf.log(tf.sigmoid(self.pos_logits) + 1e-24) * istarget -
             tf.log(1 - tf.sigmoid(self.neg_logits) + 1e-24) * istarget

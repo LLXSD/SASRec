@@ -119,11 +119,21 @@ def embedding(inputs,
                                        shape=[vocab_size, num_units],
                                        #initializer=tf.contrib.layers.xavier_initializer(),
                                        regularizer=tf.contrib.layers.l2_regularizer(l2_reg))
+        # tf.get_variable(name,  shape, initializer): name就是变量的名称，shape是变量的维度，initializer是变量初始化的方式，初始化的方式有以下几种：
+        # tf.constant_initializer：常量初始化函数
+        # tf.random_normal_initializer：正态分布
+        # tf.truncated_normal_initializer：截取的正态分布
+        # tf.random_uniform_initializer：均匀分布
+        # tf.zeros_initializer：全部是0
+        # tf.ones_initializer：全是1
+        # tf.uniform_unit_scaling_initializer：满足均匀分布，但不影响输出数量级的随机值
         if zero_pad:
             lookup_table = tf.concat((tf.zeros(shape=[1, num_units]),
                                       lookup_table[1:, :]), 0)
+            # 拼接张量，0表示在第0个维度拼接
         outputs = tf.nn.embedding_lookup(lookup_table, inputs)
-        
+        # tf.nn.embedding_lookup函数的用法主要是选取一个张量里面索引对应的元素。
+        # tf.nn.embedding_lookup（tensor, id）:tensor就是输入张量，id就是张量对应的索引
         if scale:
             outputs = outputs * (num_units ** 0.5) 
     if with_t: return outputs,lookup_table
