@@ -48,7 +48,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 config.allow_soft_placement = True
 sess = tf.Session(config=config)
-
+# 创建多进程
 sampler = WarpSampler(user_train, usernum, itemnum, batch_size=args.batch_size, maxlen=args.maxlen, n_workers=3)
 model = Model(usernum, itemnum, args)
 sess.run(tf.initialize_all_variables())
@@ -57,14 +57,16 @@ T = 0.0
 t0 = time.time()
 
 try:
+    # 一个epoch可以完整地遍历一次训练数据
     for epoch in range(1, args.num_epochs + 1):
 
         for step in tqdm(range(num_batch), total=num_batch, ncols=70, leave=False, unit='b'):
+            # tqdm是一个快速，可扩展的Python进度条，可以在 Python 长循环中添加一个进度提示信息
             u, seq, pos, neg = sampler.next_batch()
             auc, loss, _ = sess.run([model.auc, model.loss, model.train_op],
                                     {model.u: u, model.input_seq: seq, model.pos: pos, model.neg: neg,
                                      model.is_training: True})
-
+        # 经过20个epoch在验证集上验证一次指标
         if epoch % 20 == 0:
             t1 = time.time() - t0
             T += t1

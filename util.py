@@ -45,7 +45,7 @@ def evaluate(model, dataset, args, sess):
     NDCG = 0.0
     HT = 0.0
     valid_user = 0.0
-
+    # 最多处理10000个user
     if usernum>10000:
         users = random.sample(xrange(1, usernum + 1), 10000)
     else:
@@ -53,6 +53,7 @@ def evaluate(model, dataset, args, sess):
     for u in users:
 
         if len(train[u]) < 1 or len(test[u]) < 1: continue
+        # 若训练集或测试集为空，则跳过
 
         seq = np.zeros([args.maxlen], dtype=np.int32)
         idx = args.maxlen - 1
