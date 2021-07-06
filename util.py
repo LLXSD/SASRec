@@ -24,6 +24,8 @@ def data_partition(fname):
 
     for user in User:
         nfeedback = len(User[user])
+        # 获取每个user交互序列的长度
+        # 若小于3，则所有数据用作训练集；若大于等于3，则倒数第2个作为valid，倒数第1个作为test，其余作为训练集
         if nfeedback < 3:
             user_train[user] = User[user]
             user_valid[user] = []
@@ -35,7 +37,7 @@ def data_partition(fname):
             user_test[user] = []
             user_test[user].append(User[user][-1])
     return [user_train, user_valid, user_test, usernum, itemnum]
-
+    # 返回训练集、验证集、测试集、user数目和item数目
 
 def evaluate(model, dataset, args, sess):
     [train, valid, test, usernum, itemnum] = copy.deepcopy(dataset)

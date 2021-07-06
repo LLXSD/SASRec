@@ -35,13 +35,14 @@ with open(os.path.join(args.dataset + '_' + args.train_dir, 'args.txt'), 'w') as
 f.close()
 
 dataset = data_partition(args.dataset)
+# 获取train,valid和test
 [user_train, user_valid, user_test, usernum, itemnum] = dataset
 num_batch = len(user_train) / args.batch_size
 cc = 0.0
 for u in user_train:
     cc += len(user_train[u])
 print 'average sequence length: %.2f' % (cc / len(user_train))
-
+# 统计训练序列平均长度
 f = open(os.path.join(args.dataset + '_' + args.train_dir, 'log.txt'), 'w')
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True

@@ -43,6 +43,12 @@ def sample_function(user_train, usernum, itemnum, batch_size, maxlen, result_que
 
 class WarpSampler(object):
     def __init__(self, User, usernum, itemnum, batch_size=64, maxlen=10, n_workers=1):
+        # Process（用于创建进程模块）
+        # Pool（用于创建管理进程池）
+        # Queue（用于进程通信，资源共享）
+        # Value，Array（用于进程通信，资源共享）
+        # Pipe（用于管道通信）
+        # Manager（用于资源共享）
         self.result_queue = Queue(maxsize=n_workers * 10)
         self.processors = []
         for i in range(n_workers):

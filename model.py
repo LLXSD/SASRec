@@ -12,7 +12,7 @@ class Model():
         pos = self.pos
         neg = self.neg
         mask = tf.expand_dims(tf.to_float(tf.not_equal(self.input_seq, 0)), -1)
-
+        # tf.expand_dims在给定一个input时，在axis轴处给input增加一个维度。
         with tf.variable_scope("SASRec", reuse=reuse):
             # sequence embedding, item embedding table
             self.seq, item_emb_table = embedding(self.input_seq,
